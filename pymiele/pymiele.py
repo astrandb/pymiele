@@ -69,6 +69,7 @@ class AbstractAuth(ABC):
                     "Accept": "application/json",
                 },
             )
+            res.raise_for_status()
         _LOGGER.debug("set_target res: %s", res.status)
         return res
 
@@ -87,7 +88,25 @@ class AbstractAuth(ABC):
                 },
             )
             res.raise_for_status()
-        _LOGGER.debug("send-action res: %s", res.status)
+        _LOGGER.debug("send_action res: %s", res.status)
+        return res
+
+    async def set_program(self, serial: str, data):
+        """Send start program command."""
+
+        _LOGGER.debug("set_program serial: %s, data: %s", serial, data)
+        async with async_timeout.timeout(10):
+            res = await self.request(
+                "PUT",
+                f"/devices/{serial}/programs",
+                data=json.dumps(data),
+                headers={
+                    "Content-Type": CONTENT_TYPE,
+                    "Accept": "application/json",
+                },
+            )
+            res.raise_for_status()
+        _LOGGER.debug("set_program res: %s", res.status)
         return res
 
     async def listen_events(
