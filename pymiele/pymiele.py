@@ -45,13 +45,15 @@ class AbstractAuth(ABC):
             kwargs.pop("headers")
 
         agent_suffix = kwargs.get("agent_suffix")
-        user_agent = USER_AGENT_BASE if agent_suffix is None else f"{USER_AGENT_BASE} {agent_suffix}"
+        if "agent_suffix" in kwargs:
+            kwargs.pop("agent_suffix")
+        user_agent = USER_AGENT_BASE if agent_suffix is None else f"{USER_AGENT_BASE}; {agent_suffix}"
 
         access_token = await self.async_get_access_token()
         headers["Authorization"] = f"Bearer {access_token}"
         headers["User-Agent"] = user_agent
 
-        _LOGGER.debug("Request headers: %s", headers)
+        # _LOGGER.debug("Request headers: %s", headers)
 
         return await self.websession.request(
             method,
