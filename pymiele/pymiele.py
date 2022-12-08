@@ -14,9 +14,10 @@ from typing import Any, Callable, Coroutine
 import async_timeout
 from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 
-from .const import MIELE_API
+from .const import MIELE_API, VERSION
 
 CONTENT_TYPE = "application/json"
+USER_AGENT_BASE = f"Pymiele/{VERSION}"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,8 +44,14 @@ class AbstractAuth(ABC):
             headers = dict(headers)
             kwargs.pop("headers")
 
+        agent_suffix = kwargs.get("agent_suffix")
+        user_agent = USER_AGENT_BASE if agent_suffix is None else f"{USER_AGENT_BASE} {agent_suffix}"
+
         access_token = await self.async_get_access_token()
-        headers["authorization"] = f"Bearer {access_token}"
+        headers["Authorization"] = f"Bearer {access_token}"
+        headers["User-Agent"] = user_agent
+
+        _LOGGER.debug("Request headers: %s", headers)
 
         return await self.websession.request(
             method,
