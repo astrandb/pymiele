@@ -135,13 +135,23 @@ class AbstractAuth(ABC):
                         "Authorization": f"Bearer {access_token}",
                     },
                 ) as resp:
-                    # _LOGGER.debug("Response: %s", resp.status)
+                    # _LOGGER.debug("Starting listening for events: %s", resp.status)
                     while True:
-                        id_line = await resp.content.readline()
+                        # add 120s timeout for reading event data, ping is every 20s
+                        # if ping is not received, then connection must be closed and re-initialized
+                        try:
+                            id_line = await asyncio.wait_for(
+                                resp.content.readline(), timeout=120
+                            )
+                        except asyncio.exceptions.TimeoutError:
+                            resp.close()
+                            _LOGGER.warning("Ping timeout, closing connection and restarting")
+                            break
                         data_line = await resp.content.readline()
                         await resp.content.readline()  # Empty line
                         if resp.closed:
-                            return
+                            _LOGGER.warning("Connection was closed, restarting")
+                            break
                         event_type = bytearray(id_line).decode().strip()
                         if event_type == "event: devices":
                             data = json.loads(data_line[6:])
@@ -152,6 +162,7 @@ class AbstractAuth(ABC):
                             if actions_callback is not None:
                                 asyncio.create_task(actions_callback(data))
                         elif event_type == "event: ping":
+                            # _LOGGER.debug("Ping SSE")
                             pass
                         else:
                             _LOGGER.error("Unknown event type: %s", event_type)
