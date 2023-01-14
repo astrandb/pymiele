@@ -47,7 +47,11 @@ class AbstractAuth(ABC):
         agent_suffix = kwargs.get("agent_suffix")
         if "agent_suffix" in kwargs:
             kwargs.pop("agent_suffix")
-        user_agent = USER_AGENT_BASE if agent_suffix is None else f"{USER_AGENT_BASE}; {agent_suffix}"
+        user_agent = (
+            USER_AGENT_BASE
+            if agent_suffix is None
+            else f"{USER_AGENT_BASE}; {agent_suffix}"
+        )
 
         access_token = await self.async_get_access_token()
         headers["Authorization"] = f"Bearer {access_token}"
@@ -145,7 +149,9 @@ class AbstractAuth(ABC):
                             )
                         except asyncio.exceptions.TimeoutError:
                             resp.close()
-                            _LOGGER.warning("Ping timeout, closing connection and restarting")
+                            _LOGGER.warning(
+                                "Ping timeout, closing connection and restarting"
+                            )
                             break
                         data_line = await resp.content.readline()
                         await resp.content.readline()  # Empty line

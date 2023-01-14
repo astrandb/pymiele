@@ -7,6 +7,6 @@ bump2version
 colorlog
 flake8
 isort
-setuptools=="60.9.2"
+setuptools==60.9.2
 wheel
 twine
