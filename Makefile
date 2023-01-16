@@ -37,5 +37,5 @@ publish_test:
 
 publish:
 	# build publish_docs
-	twine upload dist/*
+	twine upload --repository pymiele dist/*
 
