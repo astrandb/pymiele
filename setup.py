@@ -42,6 +42,6 @@ setuptools.setup(
     #   5 - Production/Stable
         "Development Status :: 5 - Production/Stable",
     ],
-    python_requires='>=3.9',
-    install_requires=["aiohttp", "async_timeout",],
+    python_requires='>=3.11',
+    install_requires=["aiohttp", ],
 )

@@ -1,4 +1,4 @@
-VERSION = "0.1.7"
+VERSION = "0.2.0"
 
 MIELE_API = "https://api.mcs3.miele.com/v1"
 OAUTH2_AUTHORIZE = "https://api.mcs3.miele.com/thirdparty/login"
