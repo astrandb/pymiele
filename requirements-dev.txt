@@ -1,5 +1,4 @@
 aiohttp
-async_timeout
 
 black
 build
@@ -7,6 +6,6 @@ bump2version
 colorlog
 flake8
 isort
-setuptools==60.9.2
+setuptools==75.4.0
 wheel
 twine

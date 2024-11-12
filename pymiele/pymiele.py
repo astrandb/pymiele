@@ -11,7 +11,6 @@ from abc import ABC, abstractmethod
 from json.decoder import JSONDecodeError
 from typing import Any, Callable, Coroutine
 
-import async_timeout
 from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
 
 from .const import MIELE_API, VERSION
@@ -71,7 +70,7 @@ class AbstractAuth(ABC):
     ):
         """Set target temperature."""
         temp = round(temperature)
-        async with async_timeout.timeout(10):
+        async with asyncio.timeout(10):
             data = {"targetTemperature": [{"zone": zone, "value": temp}]}
             res = await self.request(
                 "PUT",
@@ -90,7 +89,7 @@ class AbstractAuth(ABC):
         """Send action command."""
 
         _LOGGER.debug("send_action serial: %s, data: %s", serial, data)
-        async with async_timeout.timeout(10):
+        async with asyncio.timeout(10):
             res = await self.request(
                 "PUT",
                 f"/devices/{serial}/actions",
@@ -108,7 +107,7 @@ class AbstractAuth(ABC):
         """Send start program command."""
 
         _LOGGER.debug("set_program serial: %s, data: %s", serial, data)
-        async with async_timeout.timeout(10):
+        async with asyncio.timeout(10):
             res = await self.request(
                 "PUT",
                 f"/devices/{serial}/programs",
