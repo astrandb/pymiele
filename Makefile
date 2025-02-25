@@ -30,7 +30,7 @@ publish_docs: doc
 	# git push origin `git subtree split --prefix html master`:gh-pages --force
 
 build: clean
-	python setup.py sdist bdist_wheel
+	python -m build
 
 publish_test:
 	twine upload --repository testpypi dist/*

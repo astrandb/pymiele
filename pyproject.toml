@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=66.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymiele"
+license = { text = "MIT" }
+dynamic = ["version"]
+authors = [{ name = "Ake Strandberg", email = "ake@strandberg.eu" }]
+description = "Python library for Miele integration with Home Assistant"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+]
+dependencies = ["aiohttp"]
+requires-python = ">=3.11.0"
+
+[project.urls]
+Repository = "https://github.com/astrandb/pymiele"
+
+[tool.setuptools.dynamic]
+version = { attr = "pymiele.const.VERSION" }
+
+[tool.setuptools.packages.find]
+include = ["pymiele*"]
