@@ -25,3 +25,7 @@ version = { attr = "pymiele.const.VERSION" }
 
 [tool.setuptools.packages.find]
 include = ["pymiele*"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true

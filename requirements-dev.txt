@@ -6,6 +6,7 @@ bump2version
 colorlog
 flake8
 isort
+mypy==1.15.0
 setuptools==75.4.0
 wheel
 twine
