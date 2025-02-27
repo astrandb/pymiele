@@ -8,6 +8,7 @@ lint:
 
 install_dev:
 	pip install -r requirements-dev.txt
+	pre-commit install
 
 test:
 	pytest -s -v
