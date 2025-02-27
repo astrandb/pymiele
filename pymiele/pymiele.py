@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from json.decoder import JSONDecodeError
 from typing import Any, Callable, Coroutine
 
-from aiohttp import ClientError, ClientResponse, ClientSession, ClientTimeout
+from aiohttp import ClientResponse, ClientResponseError, ClientSession, ClientTimeout
 
 from .const import MIELE_API, VERSION
 
@@ -24,7 +24,7 @@ _LOGGER = logging.getLogger(__name__)
 class AbstractAuth(ABC):
     """Abstract class to make authenticated requests."""
 
-    def __init__(self, websession: ClientSession, host: str):
+    def __init__(self, websession: ClientSession, host: str) -> None:
         """Initialize the auth."""
         self.websession = websession
         self.host = host
@@ -33,19 +33,12 @@ class AbstractAuth(ABC):
     async def async_get_access_token(self) -> str:
         """Return a valid access token."""
 
-    async def request(self, method, url, **kwargs) -> ClientResponse:
+    async def request(self, method: str, url: str, **kwargs: Any) -> ClientResponse:
         """Make a request."""
-        headers = kwargs.get("headers")
-
-        if headers is None:
-            headers = {}
-        else:
+        if headers := kwargs.pop("headers", {}):
             headers = dict(headers)
-            kwargs.pop("headers")
 
-        agent_suffix = kwargs.get("agent_suffix")
-        if "agent_suffix" in kwargs:
-            kwargs.pop("agent_suffix")
+        agent_suffix = kwargs.pop("agent_suffix", None)
         user_agent = (
             USER_AGENT_BASE
             if agent_suffix is None
@@ -67,7 +60,7 @@ class AbstractAuth(ABC):
 
     async def set_target_temperature(
         self, serial: str, temperature: float, zone: int = 1
-    ):
+    ) -> ClientResponse:
         """Set target temperature."""
         temp = round(temperature)
         async with asyncio.timeout(10):
@@ -85,7 +78,9 @@ class AbstractAuth(ABC):
         _LOGGER.debug("set_target res: %s", res.status)
         return res
 
-    async def send_action(self, serial: str, data):
+    async def send_action(
+        self, serial: str, data: dict[str, str | int | bool]
+    ) -> ClientResponse:
         """Send action command."""
 
         _LOGGER.debug("send_action serial: %s, data: %s", serial, data)
@@ -103,7 +98,9 @@ class AbstractAuth(ABC):
         _LOGGER.debug("send_action res: %s", res.status)
         return res
 
-    async def set_program(self, serial: str, data):
+    async def set_program(
+        self, serial: str, data: dict[str, int | list[int]]
+    ) -> ClientResponse:
         """Send start program command."""
 
         _LOGGER.debug("set_program serial: %s, data: %s", serial, data)
@@ -172,7 +169,7 @@ class AbstractAuth(ABC):
                         else:
                             _LOGGER.error("Unknown event type: %s", event_type)
 
-            except ClientError as ex:
+            except ClientResponseError as ex:
                 _LOGGER.error("SSE: %s - %s", ex.status, ex.message)
                 await asyncio.sleep(5)
             except JSONDecodeError as ex:
@@ -181,7 +178,7 @@ class AbstractAuth(ABC):
                 )
                 await asyncio.sleep(5)
             except Exception as ex:
-                _LOGGER.error("Listen_event: %s - %s", ex.status, ex.message)
+                _LOGGER.error("Listen_event: %s", ex)
                 await asyncio.sleep(5)
 
 

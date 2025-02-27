@@ -4,6 +4,7 @@ clean:
 lint:
 	isort pymiele
 	black pymiele
+	mypy pymiele
 	flake8 pymiele
 
 install_dev:
