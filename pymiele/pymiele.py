@@ -4,12 +4,13 @@
 # Should be moved to pypi.org when reasonably stable
 from __future__ import annotations
 
-import asyncio
-import json
-import logging
 from abc import ABC, abstractmethod
+import asyncio
+from collections.abc import Callable, Coroutine
+import json
 from json.decoder import JSONDecodeError
-from typing import Any, Callable, Coroutine
+import logging
+from typing import Any
 
 from aiohttp import ClientResponse, ClientResponseError, ClientSession, ClientTimeout
 
@@ -158,11 +159,11 @@ class AbstractAuth(ABC):
                         if event_type == "event: devices":
                             data = json.loads(data_line[6:])
                             if data_callback is not None:
-                                asyncio.create_task(data_callback(data))
+                                asyncio.create_task(data_callback(data))  # noqa: RUF006
                         elif event_type == "event: actions":
                             data = json.loads(data_line[6:])
                             if actions_callback is not None:
-                                asyncio.create_task(actions_callback(data))
+                                asyncio.create_task(actions_callback(data))  # noqa: RUF006
                         elif event_type == "event: ping":
                             # _LOGGER.debug("Ping SSE")
                             pass

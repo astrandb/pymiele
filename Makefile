@@ -2,7 +2,7 @@ clean:
 	rm -rf pymiele.egg-info dist build
 
 lint:
-	ruff check
+	ruff check --fix
 	ruff format
 	mypy pymiele
 

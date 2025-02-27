@@ -54,6 +54,7 @@ lint.select = [
     "W",     # pydocstyle warning
 ]
 lint.ignore = [
+    "ANN401", # any-type
     "D202",   # blank-line-after-function
     "D203",   # incorrect-blank-line-before-class
     "D212",   # multi-line-summary-first-line
