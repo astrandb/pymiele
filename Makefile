@@ -2,10 +2,9 @@ clean:
 	rm -rf pymiele.egg-info dist build
 
 lint:
-	isort pymiele
-	black pymiele
+	ruff check --fix
+	ruff format
 	mypy pymiele
-	flake8 pymiele
 
 install_dev:
 	pip install -r requirements-dev.txt
