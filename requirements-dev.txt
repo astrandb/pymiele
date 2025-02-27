@@ -1,12 +1,10 @@
 aiohttp
 
-black
 build
 bump2version
 colorlog
-flake8
-isort
 mypy==1.15.0
+ruff==0.9.7
 setuptools==75.4.0
 wheel
 twine
