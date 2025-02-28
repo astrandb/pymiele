@@ -1,7 +1,5 @@
 """Library for Miele API."""
 
-# TODO
-# Should be moved to pypi.org when reasonably stable
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
