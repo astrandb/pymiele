@@ -176,7 +176,7 @@ class AbstractAuth(ABC):
                     "JSON decode error: %s, Pos: %s, Doc: %s", ex.msg, ex.pos, ex.doc
                 )
                 await asyncio.sleep(5)
-            except Exception as ex:
+            except Exception as ex:  # pylint: disable=broad-except
                 _LOGGER.error("Listen_event: %s", ex)
                 await asyncio.sleep(5)
 
