@@ -11,7 +11,7 @@
           "ms-python.vscode-pylance",
           "ms-python.pylint",
           "charliermarsh.ruff",
-          "esbenp.prettier-vscode",
+          "esbenp.prettier-vscode"
         ],
         "settings": {
           "files.eol": "\n",
@@ -37,4 +37,3 @@
     "features": {
     }
   }
-  
