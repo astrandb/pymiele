@@ -57,6 +57,48 @@ class AbstractAuth(ABC):
             headers=headers,
         )
 
+    async def get_devices(self) -> dict:
+        """Get all devices."""
+        async with asyncio.timeout(10):
+            res = await self.request(
+                "GET", "/devices", headers={"Accept": "application/json"}
+            )
+            res.raise_for_status()
+        return await res.json()
+
+    async def get_actions(self, serial: str) -> dict:
+        """Get actions for a device."""
+        async with asyncio.timeout(10):
+            res = await self.request(
+                "GET",
+                f"/devices/{serial}/actions",
+                headers={"Accept": "application/json"},
+            )
+            res.raise_for_status()
+        return await res.json()
+
+    async def get_programs(self, serial: str) -> dict:
+        """Get programs for a device."""
+        async with asyncio.timeout(10):
+            res = await self.request(
+                "GET",
+                f"/devices/{serial}/programs",
+                headers={"Accept": "application/json"},
+            )
+            res.raise_for_status()
+        return await res.json()
+
+    async def get_rooms(self, serial: str) -> dict:
+        """Get rooms for a device."""
+        async with asyncio.timeout(10):
+            res = await self.request(
+                "GET",
+                f"/devices/{serial}/rooms",
+                headers={"Accept": "application/json"},
+            )
+            res.raise_for_status()
+        return await res.json()
+
     async def set_target_temperature(
         self, serial: str, temperature: float, zone: int = 1
     ) -> ClientResponse:
@@ -176,7 +218,7 @@ class AbstractAuth(ABC):
                     "JSON decode error: %s, Pos: %s, Doc: %s", ex.msg, ex.pos, ex.doc
                 )
                 await asyncio.sleep(5)
-            except Exception as ex:
+            except Exception as ex:  # pylint: disable=broad-except # noqa: BLE001
                 _LOGGER.error("Listen_event: %s", ex)
                 await asyncio.sleep(5)
 
