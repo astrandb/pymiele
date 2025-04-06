@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-import json
-
 
 class MieleDevices:
     """Data for all devices from API."""
