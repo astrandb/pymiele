@@ -18,7 +18,7 @@ dependencies = ["aiohttp"]
 requires-python = ">=3.12.0"
 
 [project.urls]
-Repository = "https://github.com/astrandb/pymiele"
+Repository = "https://github.com/nordicopen/pymiele"
 
 [tool.setuptools.dynamic]
 version = { attr = "pymiele.const.VERSION" }
