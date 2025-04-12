@@ -1,5 +1,4 @@
 """Data models for Miele API."""
-# Todo: Move to pymiele when complete and stable
 
 from __future__ import annotations
 
@@ -16,6 +15,52 @@ class MieleDevices:
         """Return list of all devices."""
 
         return list(self.raw_data.keys())
+
+
+class MieleTemperature:
+    """A model of temperature data."""
+
+    def __init__(self, raw_data: dict) -> None:
+        """Initialize MieleTemperature."""
+        self.raw_data = raw_data
+
+    @property
+    def raw(self) -> dict:
+        """Return raw data."""
+        return self.raw_data
+
+    @property
+    def temperature(self) -> int | None:
+        """Return temperature object."""
+        return self.raw_data["value_raw"]
+
+
+class MieleActionTargetTemperature:
+    """A model of target temperature data."""
+
+    def __init__(self, raw_data: dict) -> None:
+        """Initialize MieleActionTargetTemperature."""
+        self.raw_data = raw_data
+
+    @property
+    def raw(self) -> dict:
+        """Return raw data."""
+        return self.raw_data
+
+    @property
+    def zone(self) -> int | None:
+        """Return zone value."""
+        return self.raw_data["zone"]
+
+    @property
+    def min(self) -> int | None:
+        """Return min value."""
+        return self.raw_data["min"]
+
+    @property
+    def max(self) -> int | None:
+        """Return max value."""
+        return self.raw_data["max"]
 
 
 class MieleDevice:
@@ -96,49 +141,35 @@ class MieleDevice:
         return self.raw_data["state"]["startTime"]
 
     @property
-    def state_target_temperature(self) -> list[dict]:
+    def state_target_temperature(self) -> list[MieleTemperature]:
         """Return the target temperature of the device."""
-        return self.raw_data["state"]["targetTemperature"]
+        return [
+            MieleTemperature(temp)
+            for temp in self.raw_data["state"]["targetTemperature"]
+        ]
 
     @property
     def state_core_target_temperature(self) -> list[dict]:
         """Return the core target temperature of the device."""
-        return self.raw_data["state"]["coreTargetTemperature"]
+        return [
+            MieleTemperature(temp)
+            for temp in self.raw_data["state"]["coretargetTemperature"]
+        ]
 
     @property
-    def state_temperature(self) -> list[int]:
-        """Return the temperature of the device."""
-        return [temp["value_raw"] for temp in self.raw_data["state"]["temperature"]]
+    def state_temperatures(self) -> list[MieleTemperature]:
+        """Return list of all temperatures."""
+
+        return [
+            MieleTemperature(temp) for temp in self.raw_data["state"]["temperature"]
+        ]
 
     @property
-    def state_temperature_1(self) -> int:
-        """Return the temperature in zone 1 of the device."""
-        return self.raw_data["state"]["temperature"][0]["value_raw"]
-
-    @property
-    def state_temperature_2(self) -> int:
-        """Return the temperature in zone 2 of the device."""
-        return self.raw_data["state"]["temperature"][1]["value_raw"]
-
-    @property
-    def state_temperature_3(self) -> int:
-        """Return the temperature in zone 3 of the device."""
-        return self.raw_data["state"]["temperature"][2]["value_raw"]
-
-    @property
-    def state_core_temperature(self) -> list[dict]:
+    def state_core_temperature(self) -> list[MieleTemperature]:
         """Return the core temperature of the device."""
-        return self.raw_data["state"]["coreTemperature"]
-
-    @property
-    def state_core_temperature_1(self) -> list[dict]:
-        """Return the core temperature in zone 1 of the device."""
-        return self.raw_data["state"]["coreTemperature"][0]["value_raw"]
-
-    @property
-    def state_core_temperature_2(self) -> list[dict]:
-        """Return the core temperature in zone 2 of the device."""
-        return self.raw_data["state"]["coreTemperature"][1]["value_raw"]
+        return [
+            MieleTemperature(temp) for temp in self.raw_data["state"]["coreTemperature"]
+        ]
 
     @property
     def state_signal_info(self) -> bool:
@@ -171,14 +202,24 @@ class MieleDevice:
         return self.raw_data["state"]["remoteEnable"]["mobileStart"]
 
     @property
-    def state_ambient_light(self) -> bool:
+    def state_ambient_light(self) -> int:
         """Return the ambient light of the device."""
         return self.raw_data["state"]["ambientLight"]
 
+    @state_ambient_light.setter
+    def state_ambient_light(self, new_value: bool) -> None:
+        """Set the ambient light state."""
+        self.raw_data["state"]["ambientLight"] = new_value
+
     @property
-    def state_light(self) -> bool:
+    def state_light(self) -> int:
         """Return the light of the device."""
         return self.raw_data["state"]["light"]
+
+    @state_light.setter
+    def state_light(self, new_value: int) -> None:
+        """Set the light state."""
+        self.raw_data["state"]["light"] = new_value
 
     @property
     def state_elapsed_time(self) -> list[int]:
@@ -188,17 +229,27 @@ class MieleDevice:
     @property
     def state_spinning_speed(self) -> int | None:
         """Return the spinning speed of the device."""
-        return self.raw_data["state"]["spinningSpeed"]
+        return self.raw_data["state"]["spinningSpeed"]["value_raw"]
 
     @property
     def state_drying_step(self) -> int | None:
         """Return the drying step of the device."""
-        return self.raw_data["state"]["dryingStep"]
+        return self.raw_data["state"]["dryingStep"]["value_raw"]
+
+    @state_drying_step.setter
+    def state_drying_step(self, new_value: int) -> None:
+        """Set the drying state."""
+        self.raw_data["state"]["dryingStep"]["value_raw"] = new_value
 
     @property
     def state_ventilation_step(self) -> int | None:
         """Return the ventilation step of the device."""
-        return self.raw_data["state"]["ventilationStep"]
+        return self.raw_data["state"]["ventilationStep"]["value_raw"]
+
+    @state_ventilation_step.setter
+    def state_ventilation_step(self, new_value: int) -> None:
+        """Set the ventilation state."""
+        self.raw_data["state"]["ventilationStep"]["value_raw"] = new_value
 
     @property
     def state_plate_step(self) -> list[dict]:
@@ -209,6 +260,38 @@ class MieleDevice:
     def state_eco_feedback(self) -> dict | None:
         """Return the eco feedback of the device."""
         return self.raw_data["state"]["ecoFeedback"]
+
+    @property
+    def current_water_consumption(self) -> float | None:
+        """Return the current water consumption of the device."""
+        if self.state_eco_feedback is None:
+            return None
+        return self.raw_data["state"]["ecoFeedback"].get("currentWaterConsumption")[
+            "value"
+        ]
+
+    @property
+    def current_energy_consumption(self) -> float | None:
+        """Return the current energy consumption of the device."""
+        if self.state_eco_feedback is None:
+            return None
+        return self.raw_data["state"]["ecoFeedback"]["currentEnergyConsumption"][
+            "value"
+        ]
+
+    @property
+    def water_forecast(self) -> float | None:
+        """Return the water forecast of the device."""
+        if self.state_eco_feedback is None:
+            return None
+        return self.raw_data["state"]["ecoFeedback"].get("waterForecast")
+
+    @property
+    def energy_forecast(self) -> float | None:
+        """Return the energy forecast of the device."""
+        if self.state_eco_feedback is None:
+            return None
+        return self.raw_data["state"]["ecoFeedback"].get("energyForecast")
 
     @property
     def state_battery_level(self) -> int | None:
@@ -223,7 +306,6 @@ class MieleAction:
         """Initialize MieleAction."""
         self.raw_data = raw_data
 
-    # Todo : Add process actions
     @property
     def raw(self) -> dict:
         """Return raw data."""
@@ -277,19 +359,113 @@ class MieleAction:
     @property
     def target_temperature(self) -> list[dict]:
         """Return list of target temperature actions."""
-        return list(self.raw_data["targetTemperature"])
+        return [
+            MieleActionTargetTemperature(temp)
+            for temp in self.raw_data["state"]["targetTemperature"]
+        ]
 
     @property
     def power_on_enabled(self) -> bool:
         """Return powerOn enabled."""
         return self.raw_data["powerOn"]
 
+    @power_on_enabled.setter
+    def power_on_enabled(self, value: bool) -> None:
+        """Return powerOn enabled."""
+        self.raw_data["powerOn"] = value
+
     @property
     def power_off_enabled(self) -> bool:
         """Return powerOff enabled."""
         return self.raw_data["powerOff"]
 
+    @power_off_enabled.setter
+    def power_off_enabled(self, value: bool) -> None:
+        """Return powerOff enabled."""
+        self.raw_data["powerOff"] = value
+
     @property
     def device_name_enabled(self) -> bool:
         """Return deviceName enabled."""
         return self.raw_data["deviceName"]
+
+
+class MieleProgramsAvailable:
+    """Model for available programs."""
+
+    def __init__(self, raw_data: dict) -> None:
+        """Initialize MieleProgramsAvailable."""
+        self.raw_data = raw_data
+
+    @property
+    def programs(self) -> list[MieleProgramAvailable]:
+        """Return list of all available programs."""
+        return [MieleProgramAvailable(program) for program in self.raw_data]
+
+
+class MieleProgramAvailable:
+    """Model for available programs."""
+
+    def __init__(self, raw_data: dict) -> None:
+        """Initialize MieleProgramAvailable."""
+        self.raw_data = raw_data
+
+    @property
+    def raw(self) -> dict:
+        """Return raw data."""
+        return self.raw_data
+
+    @property
+    def program_id(self) -> int | None:
+        """Return the ID of the program."""
+        return self.raw_data["programId"]
+
+    @property
+    def program_name(self) -> str | None:
+        """Return the name of the program."""
+        return self.raw_data["program"]
+
+    @property
+    def parameters(self) -> dict | None:
+        """Return the parameters of the program."""
+        return self.raw_data["parameters"]
+
+    @property
+    def temperature(self) -> dict | None:
+        """Return the temperature parameter of the program."""
+        return self.raw_data["parameters"].get("temperature")
+
+    @property
+    def temperature_min(self) -> int | None:
+        """Return the min temperature parameter of the program."""
+        return self.raw_data["parameters"]["temperature"]["min"]
+
+    @property
+    def temperature_max(self) -> int | None:
+        """Return the max temperature parameter of the program."""
+        return self.raw_data["parameters"]["temperature"]["max"]
+
+    @property
+    def temperature_step(self) -> int | None:
+        """Return the step temperature parameter of the program."""
+        return self.raw_data["parameters"]["temperature"]["step"]
+
+    @property
+    def temperature_mandatory(self) -> bool | None:
+        """Return the mandatory temperature parameter of the program."""
+        return self.raw_data["parameters"]["temperature"]["mandatory"]
+
+    @property
+    def duration_min(self) -> list[int] | None:
+        """Return the mandatory min parameter of the program."""
+        return self.raw_data["parameters"]["duration"]["min"]
+
+    @property
+    def duration_max(self) -> list[int] | None:
+        """Return the duration max parameter of the program."""
+        return self.raw_data["parameters"]["duration"]["max"]
+
+    @property
+    def duration_mandatory(self) -> bool | None:
+        """Return the mandatory duration parameter of the program."""
+        return self.raw_data["parameters"]["duration"]["mandatory"]

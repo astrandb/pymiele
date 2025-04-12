@@ -12,7 +12,7 @@ from typing import Any
 
 from aiohttp import ClientResponse, ClientResponseError, ClientSession, ClientTimeout
 
-from .const import MIELE_API, VERSION
+from .const import AIO_TIMEOUT, MIELE_API, VERSION
 
 CONTENT_TYPE = "application/json"
 USER_AGENT_BASE = f"Pymiele/{VERSION}"
@@ -59,7 +59,7 @@ class AbstractAuth(ABC):
 
     async def get_devices(self) -> dict:
         """Get all devices."""
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "GET", "/devices", headers={"Accept": "application/json"}
             )
@@ -68,7 +68,7 @@ class AbstractAuth(ABC):
 
     async def get_actions(self, serial: str) -> dict:
         """Get actions for a device."""
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "GET",
                 f"/devices/{serial}/actions",
@@ -79,7 +79,7 @@ class AbstractAuth(ABC):
 
     async def get_programs(self, serial: str) -> dict:
         """Get programs for a device."""
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "GET",
                 f"/devices/{serial}/programs",
@@ -90,7 +90,7 @@ class AbstractAuth(ABC):
 
     async def get_rooms(self, serial: str) -> dict:
         """Get rooms for a device."""
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "GET",
                 f"/devices/{serial}/rooms",
@@ -104,7 +104,7 @@ class AbstractAuth(ABC):
     ) -> ClientResponse:
         """Set target temperature."""
         temp = round(temperature)
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             data = {"targetTemperature": [{"zone": zone, "value": temp}]}
             res = await self.request(
                 "PUT",
@@ -125,7 +125,7 @@ class AbstractAuth(ABC):
         """Send action command."""
 
         _LOGGER.debug("send_action serial: %s, data: %s", serial, data)
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "PUT",
                 f"/devices/{serial}/actions",
@@ -145,7 +145,7 @@ class AbstractAuth(ABC):
         """Send start program command."""
 
         _LOGGER.debug("set_program serial: %s, data: %s", serial, data)
-        async with asyncio.timeout(10):
+        async with asyncio.timeout(AIO_TIMEOUT):
             res = await self.request(
                 "PUT",
                 f"/devices/{serial}/programs",
