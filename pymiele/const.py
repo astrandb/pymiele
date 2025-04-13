@@ -1,6 +1,6 @@
 """Constants for pymiele."""
 
-VERSION = "0.3.2"
+VERSION = "0.3.3"
 
 MIELE_API = "https://api.mcs3.miele.com/v1"
 OAUTH2_AUTHORIZE = "https://api.mcs3.miele.com/thirdparty/login"
