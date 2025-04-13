@@ -31,6 +31,29 @@ categories:
     labels:
       - 'dependencies'
 
+autolabeler:
+  - label: "maintenance"
+    files:
+      - "*.md"
+      - ".github/*"
+      - ".ruff.toml"
+      - ".pre-commit-config.yaml"
+      - "pyproject.toml"
+      
+  - label: "bugfix"
+    title:
+      - "/fix/i"
+  - label: "code quality"
+    title:
+      - "lint"
+  - label: "development tools"
+    files:
+      - ".devcontainer/*"
+      - ".devcontainer.json"
+      - "Makefile"
+      - "setup.cfg"
+      - "pyproject.toml"
+      
 version-resolver:
   major:
     labels:
