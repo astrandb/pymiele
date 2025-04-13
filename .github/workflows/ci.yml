@@ -24,7 +24,7 @@ jobs:
       - run: ruff format --check --respect-gitignore
 
       - name: Build package
-        if: github.eventname =='release'
+        if: github.event_name =='release'
         run: python -m build
 
       - name: Publish package
