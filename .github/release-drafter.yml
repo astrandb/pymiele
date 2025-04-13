@@ -27,6 +27,7 @@ categories:
     labels:
       - 'documentation'
   - title: '⬆️ Dependency updates'
+    collapse-after: 2
     labels:
       - 'dependencies'
 
@@ -52,6 +53,14 @@ version-resolver:
   default: patch
 
 template: |
-  ## What’s changed
+  <!--
+  ### Checklist for release
+  - Download translations PR from Lokalise
+  - Run ruff linter
+  - Run make bump - select proper variant in Makefile
+  - Review the draft below and update if needed
+  -->
+
+  ## Notable Changes
 
   $CHANGES
