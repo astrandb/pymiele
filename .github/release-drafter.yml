@@ -55,8 +55,6 @@ version-resolver:
 template: |
   <!--
   ### Checklist for release
-  - Download translations PR from Lokalise
-  - Run ruff linter
   - Run make bump - select proper variant in Makefile
   - Review the draft below and update if needed
   -->
