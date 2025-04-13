@@ -23,13 +23,13 @@ jobs:
       - run: ruff check --output-format=github
       - run: ruff format --check --respect-gitignore
 
-    - name: Build package
-      if: github.eventname =='release'
-      run: python -m build
+      - name: Build package
+        if: github.eventname =='release'
+        run: python -m build
 
-    - name: Publish package
-      if: github.event_name == 'release'
-      uses: pypa/gh-action-pypi-publish@v1.2.4
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish package
+        if: github.event_name == 'release'
+        uses: pypa/gh-action-pypi-publish@v1.2.4
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
