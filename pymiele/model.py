@@ -34,6 +34,11 @@ class MieleTemperature:
         """Return temperature object."""
         return self.raw_data["value_raw"]
 
+    @temperature.setter
+    def temperature(self, new_value: int) -> None:
+        """Write the temperature."""
+        self.raw_data["value_raw"] = new_value
+
 
 class MieleActionTargetTemperature:
     """A model of target temperature data."""
@@ -352,7 +357,7 @@ class MieleAction:
         return list(self.raw_data["programId"])
 
     @property
-    def runOnTime(self) -> list[int]:
+    def run_on_time(self) -> list[int]:
         """Return list of run on time actions."""
         return list(self.raw_data["runOnTime"])
 
@@ -361,7 +366,7 @@ class MieleAction:
         """Return list of target temperature actions."""
         return [
             MieleActionTargetTemperature(temp)
-            for temp in self.raw_data["state"]["targetTemperature"]
+            for temp in self.raw_data["targetTemperature"]
         ]
 
     @property
