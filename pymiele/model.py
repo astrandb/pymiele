@@ -68,6 +68,29 @@ class MieleActionTargetTemperature:
         return self.raw_data["max"]
 
 
+class MielePlateStep:
+    """Model of plate step."""
+
+    def __init__(self, raw_data: dict) -> None:
+        """Initialize MielePlateStep."""
+        self.raw_data = raw_data
+
+    @property
+    def raw(self) -> dict:
+        """Return raw data."""
+        return self.raw_data
+
+    @property
+    def value_raw(self) -> int | None:
+        """Return raw value data."""
+        return self.raw_data["value_raw"]
+
+    @property
+    def value_localized(self) -> int | None:
+        """Return localized value."""
+        return self.raw_data["value_localized"]
+
+
 class MieleDevice:
     """Data for a single device from API."""
 
@@ -154,7 +177,7 @@ class MieleDevice:
         ]
 
     @property
-    def state_core_target_temperature(self) -> list[dict]:
+    def state_core_target_temperature(self) -> list[MieleTemperature]:
         """Return the core target temperature of the device."""
         return [
             MieleTemperature(temp)
@@ -257,9 +280,9 @@ class MieleDevice:
         self.raw_data["state"]["ventilationStep"]["value_raw"] = new_value
 
     @property
-    def state_plate_step(self) -> list[dict]:
+    def state_plate_step(self) -> list[MielePlateStep]:
         """Return the plate step of the device."""
-        return self.raw_data["state"]["plateStep"]
+        return [MielePlateStep(plate) for plate in self.raw_data["state"]["plateStep"]]
 
     @property
     def state_eco_feedback(self) -> dict | None:
@@ -362,7 +385,7 @@ class MieleAction:
         return list(self.raw_data["runOnTime"])
 
     @property
-    def target_temperature(self) -> list[dict]:
+    def target_temperature(self) -> list[MieleActionTargetTemperature]:
         """Return list of target temperature actions."""
         return [
             MieleActionTargetTemperature(temp)
