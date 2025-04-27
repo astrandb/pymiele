@@ -181,7 +181,7 @@ class MieleDevice:
         """Return the core target temperature of the device."""
         return [
             MieleTemperature(temp)
-            for temp in self.raw_data["state"]["coretargetTemperature"]
+            for temp in self.raw_data["state"]["coreTargetTemperature"]
         ]
 
     @property
