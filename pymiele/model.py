@@ -144,9 +144,19 @@ class MieleDevice:
         return self.raw_data["state"]["ProgramID"]["value_raw"]
 
     @property
+    def state_program_id_localized(self) -> str:
+        """Return the program ID of the device."""
+        return self.raw_data["state"]["ProgramID"]["value_localized"]
+
+    @property
     def state_status(self) -> int:
         """Return the status of the device."""
         return self.raw_data["state"]["status"]["value_raw"]
+
+    @property
+    def state_status_localized(self) -> str:
+        """Return the status of the device."""
+        return self.raw_data["state"]["status"]["value_localized"]
 
     @property
     def state_program_type(self) -> int:
@@ -154,9 +164,19 @@ class MieleDevice:
         return self.raw_data["state"]["programType"]["value_raw"]
 
     @property
+    def state_program_type_localized(self) -> str:
+        """Return the program type of the device."""
+        return self.raw_data["state"]["programType"]["value_localized"]
+
+    @property
     def state_program_phase(self) -> int:
         """Return the program phase of the device."""
         return self.raw_data["state"]["programPhase"]["value_raw"]
+
+    @property
+    def state_program_phase_localized(self) -> str:
+        """Return the program phase of the device."""
+        return self.raw_data["state"]["programPhase"]["value_localized"]
 
     @property
     def state_remaining_time(self) -> list[int]:
