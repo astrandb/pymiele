@@ -159,6 +159,26 @@ class AbstractAuth(ABC):
         _LOGGER.debug("set_program res: %s", res.status)
         return res
 
+    async def set_room(
+        self, serial: str, data: dict[str, int | list[int]]
+    ) -> ClientResponse:
+        """Send start in room command."""
+
+        _LOGGER.debug("set_room serial: %s, data: %s", serial, data)
+        async with asyncio.timeout(AIO_TIMEOUT):
+            res = await self.request(
+                "PUT",
+                f"/devices/{serial}/rooms",
+                data=json.dumps(data),
+                headers={
+                    "Content-Type": CONTENT_TYPE,
+                    "Accept": "application/json",
+                },
+            )
+            res.raise_for_status()
+        _LOGGER.debug("set_room res: %s", res.status)
+        return res
+
     async def listen_events(
         self,
         data_callback: Callable[[dict[str, Any]], Any] | None = None,
