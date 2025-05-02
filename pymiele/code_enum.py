@@ -27,6 +27,15 @@ class MieleEnum(IntEnum):
         return None
 
     @classmethod
+    def __new__(cls, value: object, *values: list[int]) -> Any:
+        """Allow duplicate values."""
+        self = int.__new__(cls)
+        self._value_ = value
+        for v in values:
+            self._add_value_alias_(v)
+        return self
+
+    @classmethod
     def as_dict(cls) -> dict[str, int]:
         """Return a dict of enum names and values."""
         return {i.name: i.value for i in cls if i.name != "missing"}
@@ -50,3 +59,8 @@ class MieleEnum(IntEnum):
     def items(cls) -> Any:
         """Return a list of enum items."""
         return cls.as_dict().items()
+
+    @classmethod
+    def unique_keys(cls) -> set[str]:
+        """Return a set of unique enum names."""
+        return set(cls.as_dict().keys())
