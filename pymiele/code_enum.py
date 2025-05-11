@@ -39,12 +39,12 @@ class MieleEnum(IntEnum):
     @classmethod
     def as_dict(cls) -> dict[str, int]:
         """Return a dict of enum names and values."""
-        return {i.name: i.value for i in cls if i.name != "unknown_code"}
+        return {i.name: i.value for i in cls if i.name != "missing"}
 
     @classmethod
     def as_enum_dict(cls) -> dict[int, Any]:
         """Return a dict of enum values and enum names."""
-        return {i.value: i for i in cls if i.name != "unknown_code"}
+        return {i.value: i for i in cls if i.name != "missing"}
 
     @classmethod
     def values(cls) -> list[int]:
