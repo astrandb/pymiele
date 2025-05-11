@@ -18,12 +18,14 @@ class MieleEnum(IntEnum):
 
     @classmethod
     def _missing_(cls, value: object) -> Any | None:
-        if hasattr(cls, "unknown"):
-            warning = f"Missing {cls.__name__} code: {value} - defaulting to 'unknown'"
+        if hasattr(cls, "unknown_code") or hasattr(cls, "unknown"):
+            warning = (
+                f"Missing {cls.__name__} code: {value} - defaulting to 'unknown_code'"
+            )
             if warning not in completed_warnings:
                 completed_warnings.add(warning)
                 _LOGGER.warning(warning)
-            return cls.unknown
+            return cls.unknown_code
         return None
 
     def __new__(cls, value: int, *values: list[int]) -> Any:
@@ -37,12 +39,12 @@ class MieleEnum(IntEnum):
     @classmethod
     def as_dict(cls) -> dict[str, int]:
         """Return a dict of enum names and values."""
-        return {i.name: i.value for i in cls if i.name != "missing"}
+        return {i.name: i.value for i in cls if i.name != "unknown_code"}
 
     @classmethod
     def as_enum_dict(cls) -> dict[int, Any]:
         """Return a dict of enum values and enum names."""
-        return {i.value: i for i in cls if i.name != "missing"}
+        return {i.value: i for i in cls if i.name != "unknown_code"}
 
     @classmethod
     def values(cls) -> list[int]:
