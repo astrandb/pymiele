@@ -130,3 +130,5 @@ dmypy.json
 
 # OS specifics
 .DS_Store
+
+testing/
